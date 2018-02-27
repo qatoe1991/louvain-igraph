@@ -517,6 +517,50 @@ class SurpriseVertexPartition(MutableVertexPartition):
         initial_membership, weights)
     self._update_internal_membership()
 
+
+class MapVertexPartition(MutableVertexPartition):
+  """ Implements (asymptotic) Map.
+
+  """
+
+  def __init__(self, graph, initial_membership=None, weights=None, node_sizes=None):
+    """
+    Parameters
+    ----------
+    graph : :class:`ig.Graph`
+      Graph to define the partition on.
+
+    initial_membership : list of int
+      Initial membership for the partition. If :obj:`None` then defaults to a
+      singleton partition.
+
+    weights : list of double, or edge attribute
+      Weights of edges. Can be either an iterable or an edge attribute.
+
+    node_sizes : list of int, or vertex attribute
+      Sizes of nodes are necessary to know the size of communities in aggregate
+      graphs. Usually this is set to 1 for all nodes, but in specific cases
+      this could be changed.
+    """
+    if initial_membership is not None:
+      initial_membership = list(initial_membership)
+
+    super(MapVertexPartition, self).__init__(graph, initial_membership)
+
+    pygraph_t = _get_py_capsule(graph)
+
+    if weights is not None:
+      if isinstance(weights, str):
+        weights = graph.es[weights]
+      else:
+        # Make sure it is a list
+        weights = list(weights)
+
+    self._partition = _c_louvain._new_MapVertexPartition(pygraph_t,
+        initial_membership, weights)
+    self._update_internal_membership()
+
+
 class SignificanceVertexPartition(MutableVertexPartition):
   """ Implements Significance.
 
@@ -699,8 +743,7 @@ class RBERVertexPartition(LinearResolutionParameterVertexPartition):
         # Make sure it is a list
         node_sizes = list(node_sizes)
 
-    self._partition = _c_louvain._new_RBERVertexPartition(pygraph_t,
-        initial_membership, weights, node_sizes, resolution_parameter)
+    self._partition = _c_louvain._new_RBERVertexPartition(pygraph_t, initial_membership, weights, node_sizes, resolution_parameter)
     self._update_internal_membership()
 
 class RBConfigurationVertexPartition(LinearResolutionParameterVertexPartition):
