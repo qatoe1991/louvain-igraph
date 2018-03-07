@@ -401,6 +401,21 @@ void Graph::init_admin()
   for (size_t v = 0; v < n; v++)
     this->_strength_out[v] = VECTOR(res)[v];
   igraph_vector_destroy(&res);
+  
+  // Strength ALL
+  igraph_vector_init(&res, n);
+  // Copy weights to an igraph_vector_t
+  igraph_vector_init_copy(&weights, &this->_edge_weights[0], this->ecount());
+  // Calculcate strength
+  igraph_strength(this->_graph, &res, igraph_vss_all(), IGRAPH_ALL, true, &weights);
+  igraph_vector_destroy(&weights);
+
+  // Assign to strength vector
+  this->_strength_all.clear();
+  this->_strength_all.resize(n);
+  for (size_t v = 0; v < n; v++)
+    this->_strength_all[v] = VECTOR(res)[v];
+  igraph_vector_destroy(&res);
 
   // Degree IN
   igraph_vector_init(&res, n);

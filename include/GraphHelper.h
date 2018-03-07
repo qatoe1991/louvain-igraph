@@ -182,6 +182,8 @@ class Graph
         return this->_strength_in[v];
       else if (mode == IGRAPH_OUT)
         return this->_strength_out[v];
+      else if (mode == IGRAPH_ALL)
+        return this->_strength_all[v];
       else
         throw Exception("Incorrect mode specified.");
     };
@@ -195,6 +197,7 @@ class Graph
 
     // Utility variables to easily access the strength of each node
     vector<double> _strength_in;
+    vector<double> _strength_out;
     vector<double> _strength_out;
 
     vector<size_t> _degree_in;
