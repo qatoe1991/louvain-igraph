@@ -38,104 +38,111 @@ double MapVertexPartition::plogp(double p)
 
 double MapVertexPartition::diff_move(size_t v, size_t new_comm)
 {
-    double diff =0.0;
+#ifdef DEBUG
+    cerr << "double MapEquationVertexPartition::diff_move(" << v << ", " << new_comm << ")" << endl;
+#endif
+    double diff = 0.0;
     size_t old_comm = this->membership(v);
-    // the total link weight of the node/module in the whole network
-    // find the move that minimized the description length
-#ifdef DEBUG
-    cerr << "\t" << "graph_weight=" << graph_weight <<  "node_weight"  << node_weight << "." << endl;
-#endif
-    if (new_comm != old_comm)
-    {
-        // before move
-        // the total weight of modules in the networks
-        //double module_module_weights = this->total_weight_in_all_comms();
+    double t_w = this->graph->total_weight();
+    double w = this->total_weight_in_all_comms();
+    
+    if (new_comm!=old_comm){
+    
+    //L(M) = w_exit*log(w_exit)-2sum(m,i=1)w_m_exit*log(w_m_exit)+sum(m,i=1)(w_m_exit+w_m)*log(w_m_exit+w_m)
         
-        // double node_weight = this->graph->strength(v, IGRAPH_ALL);
-        double node_weight = 2.5;
-        double graph_weight = this->graph->total_weight();
-        //old module
-        double old_length = 0.0;
-        // relative module weight which is the total weights from the old module where v is part of
-        double module_weight = this->total_weight_in_comm(old_comm);
-        // exit module weight
-        double exit_module_weight = this->weight_from_comm(v,old_comm);
-        // all the links between modules condisedering the old module
-        double old = 0.0;
-        if (exit_module_weight >node_weight)
-            { old = exit_module_weight-node_weight; }
-        else {old = node_weight-exit_module_weight;}
-        // calculate of the codelenght of the old module
-        old_length = old* plogp(old) - 2*exit_module_weight* plogp(exit_module_weight) - (node_weight) * plogp(node_weight) + (exit_module_weight + module_weight)* plogp(exit_module_weight + module_weight);
-    #ifdef DEBUG
-        cerr << "\t" << "module_weight=" << module_weight << "exit_module_weight" << exit_module_weight << "old" << old << "." << endl;
-    #endif
-#ifdef DEBUG
-        cerr << "\t" << "old_length" << old_length << "." << endl;
-#endif
-        // new module
-        double new_length = 0.0;
-        //exit module weight
-        double new_module_weight = 2*this->weight_from_comm(v, new_comm);
-        // total module weight
-        double module_new= this->total_weight_in_comm(new_comm);
+        double v = this->graph->strength(v, IGRAPH_ALL);
         
-        double newM = 0.0;
-        if(new_module_weight > node_weight){ newM = new_module_weight- node_weight ;}
-        else {newM = node_weight-new_module_weight;}
-        //calculate the codelength of the new module
-        new_length = newM * plogp(newM)- 2*new_module_weight* plogp (new_module_weight)- (node_weight) * plogp(node_weight) + (new_module_weight + module_new)*log(new_module_weight + module_new);
-    #ifdef DEBUG
-        cerr << "\t" << "new_module_weight" << new_module_weight << "module_new" << module_new << "newM" << newM << "." << endl;
-    #endif
-    #ifdef DEBUG
-        cerr << "\t" << "new_length" << new_length << "." << endl;
-    #endif
-        //calculate the diff
-        diff = old_length - new_length;
-        return diff;
+    //old comm
+        double w_old = this-> total_weight_in_comm(old_comm);
+        double w_v_old = this->weight_from_comm(v,old_comm);
+        double out_old = this->total_weight_from_comm(old_comm);
+    //new comm
+        double w_new = this->total_weight_in_comm(new_comm);
+        double w_v_new = this->weight_from_comm(v,new_comm);
+        double new_out = this->total_weight_from_comm(old_comm);
+        
+    //Before move v to the other community L(M)
+    // the total weight of the link exiting old module
+        double e = out_old - w_old; // the links that goes outside the old module
+        double e_v = v- w_v_old;   // the total weight of the links that link v with other nodes but not the nodes inside the old_comm
+        double exiting = e + e_v;
+    // the total weight of the links exiting new module
+        double e_new = new_out- w_new;
+    // the total weight between modules
+        double m = 1 - w/2*t_w;
+        
+    //After the move v to the new community
+    //module weight
+        double old = out_old - v;
+        double new_c = new_out + v;
+        
+    // the total exiting weights of old_comm
+        double o_old = e + w_v_old - e_v;
+    // the total exiting weight of new comm
+        double e_v_n = v - w_v_new; // all the links that go outside v to new_comm but not with the nodes inside new_comm
+        double o_new = e_new -w_v_new +  e_v_n;
+    // the total weight between modules
+        double w1 = m + w_v_old - w_v_new;
+        
+    // codelength term before move (delta between terms)
+        double old_module_exit = 2*o_old*log(o_old) - 2*exiting*log(exiting);
+        double new_module_exit = 2*o_new*log(o_new) - 2* e_new*log(e_new);
+        double module_exit = new_module_exit - old_module_exit;
+        
+        double exit_between_modules = w1*log(w1)- m*log(m);
+        
+        double old_module_weight = (o_old+old)*log(o_old+old)-(exiting + out_old)*log(exiting + out_old);
+        double new_module_weight = (o_new+new_c)*log(o_new+new_c) - (e_new+new_out)*log(e_new+new_out);
+        double module_weight = new_module_weight - old_module_weight;
+        
+    // Calculation of L(M)
+        double diff = exit_between_modules*log(exit_between_modules) - 2*module_exit*log(module_exit)+(module_exit+module_weight)*log(module_exit+module_weight);
+    
     }
-}
+    return diff;
+    
+    }
+
 
 double MapVertexPartition::quality()
 {
-    return 12.0;
-// MapEquationVertexPartition quality 
-    #ifdef DEBUG
-        cerr << "double MapEquationVertexPartition::quality()" << endl;
-    #endif
-        double mod= 0.0;
-        double total_weight;
+#ifdef DEBUG
+    cerr << "double MapEquationVertexPartition::quality()" << endl;
+#endif
+    double mod= 0.0;
+    double total_weight;
+    double exit_weights = 0.0;
+    double all = 0.0;
+    
+    if (this->graph->is_directed())
+    return 0.0;
+    else
+    total_weight = 2*this->graph->total_weight();
+#ifdef DEBUG
+    cerr << "\t" << "total_weight=" << total_weight << "." << endl;
+#endif
+    for (size_t c = 0; c < this->nb_communities(); c++)
+    {
         
-        if (this->graph->is_directed())
-            return 0.0;
-        else
-            total_weight = 2*this->graph->total_weight();
-    #ifdef DEBUG
-        cerr << "\t" << "total_weight=" << total_weight << "." << endl;
-    #endif
-        for (size_t c = 0; c < this->nb_communities(); c++)
-        {
-            
-            // size_t n_c = this->csize(c);
-            // the total relative links of the community in the network;
-            double comm_weight = this->graph->strength(c, IGRAPH_ALL);
-            // the internal weight of the community
-            double module_weight = this->total_weight_in_comm(c);
-            // the exit links
-            double exit_weights = comm_weight-module_weight;
-            //all the links between modules
-            double all = total_weight-module_weight;
-    #ifdef DEBUG
-            cerr << "\t" << ", comm_weight=" << comm_weight << ", module_weight=" << module_weight << ", exit_weights" << exit_weights << "all" << all << "." << endl;
-    #endif
-            //cacluate the codelengths
-            
-            mod = all*plogp(all) - 2*exit_weights *plogp(exit_weights) - comm_weight*plogp(comm_weight)+(exit_weights + module_weight)*plogp(exit_weights+module_weight);
-        }
-    #ifdef DEBUG
-        cerr << "exit MapEquationVertexPartition::quality()" << endl;
-        cerr << "return " << mod << endl << endl;
-    #endif
-        return mod;
+        size_t n_c = this->csize(c);
+        // the total relative links of the community in the network;
+        double comm_weight = this->total_weight_from_comm(c);
+        // the internal weight of the community
+        double module_weight = this->total_weight_in_comm(c);
+        // the exit links
+        double exit_weights= comm_weight-module_weight;
+        //all the links between modules
+        double all = 1 - this->total_weight_in_all_comms()/total_weight;
+#ifdef DEBUG
+        cerr << "\t" << "n_c=" << n_c << ", comm_weight=" << comm_weight << ", module_weight=" << module_weight << ", exit_weights" << exit_weights << "all" << all << "." << endl;
+#endif
+        //cacluate the codelengths
+        
+        mod = all*plogp(all) - 2*exit_weights *plogp(exit_weights) + (exit_weights + comm_weight)* plogp(exit_weights+comm_weight);
+    }
+#ifdef DEBUG
+    cerr << "exit MapEquationVertexPartition::quality()" << endl;
+    cerr << "return " << mod << endl << endl;
+#endif
+    return mod;
 }

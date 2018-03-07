@@ -198,7 +198,7 @@ class Graph
     // Utility variables to easily access the strength of each node
     vector<double> _strength_in;
     vector<double> _strength_out;
-    vector<double> _strength_out;
+    vector<double> _strength_all;
 
     vector<size_t> _degree_in;
     vector<size_t> _degree_out;
