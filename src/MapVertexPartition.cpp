@@ -85,18 +85,18 @@ double MapVertexPartition::diff_move(size_t v, size_t new_comm)
         double w1 = m + w_v_old - w_v_new;
         
     // codelength term before move (delta between terms)
-        double old_module_exit = 2*o_old*log(o_old) - 2*exiting*log(exiting);
-        double new_module_exit = 2*o_new*log(o_new) - 2* e_new*log(e_new);
+        double old_module_exit = 2*o_old*plogp(o_old) - 2*e*plogp(e);
+        double new_module_exit = 2*o_new*plogp(o_new) - 2* e_new*plogp(e_new);
         double module_exit = new_module_exit - old_module_exit;
         
-        double exit_between_modules = w1*log(w1)- m*log(m);
+        double exit_between_modules = w1*plogp(w1)- m*plogp(m);
         
-        double old_module_weight = (o_old+old)*log(o_old+old)-(exiting + out_old)*log(exiting + out_old);
-        double new_module_weight = (o_new+new_c)*log(o_new+new_c) - (e_new+new_out)*log(e_new+new_out);
+        double old_module_weight = (o_old+old)*plogp(o_old+old)-(exiting + out_old)*plogp(exiting + out_old);
+        double new_module_weight = (o_new+new_c)*plogp(o_new+new_c) - (e_new+new_out)*plogp(e_new+new_out);
         double module_weight = new_module_weight - old_module_weight;
         
     // Calculation of L(M)
-        double diff = exit_between_modules*log(exit_between_modules) - 2*module_exit*log(module_exit)+(module_exit+module_weight)*log(module_exit+module_weight);
+        double diff = exit_between_modules*plogp(exit_between_modules) - 2*module_exit*plogp(module_exit)+(module_exit+module_weight)*plogp(module_exit+module_weight);
     
     }
     return diff;
