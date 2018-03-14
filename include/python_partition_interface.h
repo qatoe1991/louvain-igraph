@@ -11,6 +11,8 @@
 #include "ModularityVertexPartition.h"
 #include "SignificanceVertexPartition.h"
 #include "SurpriseVertexPartition.h"
+#include "MapVertexPartition.h"
+#include "SBMVertexPartition.h"
 #include "RBConfigurationVertexPartition.h"
 #include "RBERVertexPartition.h"
 #include "CPMVertexPartition.h"
@@ -45,6 +47,8 @@ extern "C"
   PyObject* _new_ModularityVertexPartition(PyObject *self, PyObject *args, PyObject *keywds);
   PyObject* _new_SignificanceVertexPartition(PyObject *self, PyObject *args, PyObject *keywds);
   PyObject* _new_SurpriseVertexPartition(PyObject *self, PyObject *args, PyObject *keywds);
+  PyObject* _new_MapVertexPartition(PyObject *self, PyObject *args, PyObject *keywds);
+  PyObject* _new_SBMVertexPartition(PyObject *self, PyObject *args, PyObject *keywds);
   PyObject* _new_CPMVertexPartition(PyObject *self, PyObject *args, PyObject *keywds);
   PyObject* _new_RBERVertexPartition(PyObject *self, PyObject *args, PyObject *keywds);
   PyObject* _new_RBConfigurationVertexPartition(PyObject *self, PyObject *args, PyObject *keywds);

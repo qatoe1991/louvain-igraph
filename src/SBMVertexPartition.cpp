@@ -1,4 +1,3 @@
-
 //  SBMVertexPartition.cpp
 //  kristo
 //
@@ -20,20 +19,38 @@ MutableVertexPartition(graph,
 
 SBMVertexPartition::SBMVertexPartition(Graph* graph) :
 MutableVertexPartition(graph)
+SBMVertexPartition::SBMVertexPartition(Graph* graph,
+      vector<size_t> const& membership) :
+        MutableVertexPartition(graph,
+        membership)
+{ }
+
+SBMVertexPartition::SBMVertexPartition(Graph* graph) :
+        MutableVertexPartition(graph)
 { }
 
 SBMVertexPartition* SBMVertexPartition::create(Graph* graph)
 {
+<<<<<<< HEAD
     return new SBMVertexPartition(graph);
 }
 
 SBMVertexPartition*  SBMVertexPartition::create(Graph* graph, vector<size_t> const& membership)
 {
     return new  SBMVertexPartition(graph, membership);
+=======
+  return new SBMVertexPartition(graph);
+}
+
+ SBMVertexPartition*  SBMVertexPartition::create(Graph* graph, vector<size_t> const& membership)
+{
+  return new  SBMVertexPartition(graph, membership);
+>>>>>>> 6b11a72... Add new SBMVertexPartition
 }
 
 SBMVertexPartition::~SBMVertexPartition()
 { }
+<<<<<<< HEAD
 
 
 // calculatoin of  a and b
@@ -197,3 +214,22 @@ double SBMVertexPartition::quality()
     return sbm;
 }
 
+=======
+            
+//plogp
+double SBMVertexPartition::plogp(double p)
+{
+    return p > 0.0 ? p * log2(p) : 3;
+}
+
+double SBMVertexPartition::diff_move(size_t v, size_t new_comm)
+{
+    return true;    
+}
+
+
+double SBMVertexPartition::quality()
+{
+    return true;
+}
+>>>>>>> 6b11a72... Add new SBMVertexPartition

@@ -11,6 +11,8 @@
 #include "ModularityVertexPartition.h"
 #include "SignificanceVertexPartition.h"
 #include "SurpriseVertexPartition.h"
+#include "MapVertexPartition.h"
+#include "SBMVertexPartition.h"
 #include "RBConfigurationVertexPartition.h"
 #include "RBERVertexPartition.h"
 #include "CPMVertexPartition.h"
@@ -31,6 +33,8 @@ extern "C"
       {"_new_ModularityVertexPartition",                            (PyCFunction)_new_ModularityVertexPartition,                            METH_VARARGS | METH_KEYWORDS, ""},
       {"_new_SignificanceVertexPartition",                          (PyCFunction)_new_SignificanceVertexPartition,                          METH_VARARGS | METH_KEYWORDS, ""},
       {"_new_SurpriseVertexPartition",                              (PyCFunction)_new_SurpriseVertexPartition,                              METH_VARARGS | METH_KEYWORDS, ""},
+      {"_new_MapVertexPartition",                                   (PyCFunction)_new_MapVertexPartition,                                   METH_VARARGS | METH_KEYWORDS, ""},
+      {"_new_SBMVertexPartition",                                   (PyCFunction)_new_SBMVertexPartition,                                   METH_VARARGS | METH_KEYWORDS, ""},
       {"_new_CPMVertexPartition",                                   (PyCFunction)_new_CPMVertexPartition,                                   METH_VARARGS | METH_KEYWORDS, ""},
       {"_new_RBERVertexPartition",                                  (PyCFunction)_new_RBERVertexPartition,                                  METH_VARARGS | METH_KEYWORDS, ""},
       {"_new_RBConfigurationVertexPartition",                       (PyCFunction)_new_RBConfigurationVertexPartition,                       METH_VARARGS | METH_KEYWORDS, ""},
