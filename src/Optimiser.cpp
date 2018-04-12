@@ -1,4 +1,5 @@
 #include "Optimiser.h"
+#include <iostream>
 
 /****************************************************************************
   Create a new Optimiser object

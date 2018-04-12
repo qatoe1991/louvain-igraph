@@ -5,7 +5,7 @@
 #define IS_PY3K
 #endif
 
-#include <Python.h>
+#include <python.h>
 #include <igraph.h>
 #include "GraphHelper.h"
 #include "ModularityVertexPartition.h"
