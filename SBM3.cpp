@@ -74,98 +74,56 @@ double SBMVertexPartition::diff_move(size_t v, size_t new_comm)
     size_t old_comm = this->membership(v);
     
     
-    
     if (new_comm != old_comm)
     {
+
+        
         for (size_t t = 0; t < this->nb_communities(); t++)
         {
-            
             if (t != old_comm && t != new_comm)
             {
                 double m_rs = this->getWeightBetweenCommunities(old_comm,new_comm);
                 std::cout<<"M_rs: "<<m_rs<<endl;
-                double m_rt = this-> getWeightBetweenCommunities(old_comm, t);
-                double m_st = this-> getWeightBetweenCommunities(new_comm, t);
-                std::cout <<"M_rt: "<< m_rt<<endl;
-                std::cout <<"M_st: "<<m_st<<endl;
-                double k_it = this->getWeightBetweenCommunities(v,t);
-                std::cout <<"K_it: " << k_it<<endl;
-                double k_ir = this->weight_to_comm(v, old_comm);
-                std::cout<<"K_ir : "<< k_ir<< endl;
-                double k_is = this->weight_to_comm(v, new_comm);
-                std::cout<<"K_is : "<< k_is<< endl;
-                double m_rr = this->total_weight_in_comm(old_comm);
-                double m_ss = this->total_weight_in_comm(new_comm);
-                std::cout <<"M_rr: "<< m_rr<<endl;
-                std::cout <<"M_ss: "<<m_ss<<endl;
-                
                 
                 double k_i = this->graph->strength(v, IGRAPH_ALL);
-                //double u_i = this->graph->node_self_weight(v);
-                std::cout <<"K_i: "<< k_i<<endl;
+                double u_i = this->graph->node_self_weight(v);
                 
+                std::cout<<"K_i: "<< k_i<< endl;
+                
+                double m_rt = this->getWeightBetweenCommunities(old_comm, t);
+                double m_st = this->getWeightBetweenCommunities(new_comm, t);
+                std::cout <<"M_rt: "<<m_rt<<endl;
+                std::cout <<"M_st: "<<m_st<<endl;
+                double m_rr = this->total_weight_in_comm(old_comm);
+                
+                double m_ss = this->total_weight_in_comm(new_comm);
+                std::cout <<"Links in old_comm: "<<m_rr<<endl;
+                
+                double k_it = this->weight_from_comm(v,t);
+                std::cout <<"K_it: "<<k_it<<endl;
+               
+                double k_ir = this->weight_from_comm(v, old_comm);
+                double k_is = this->weight_from_comm(v, new_comm);
+                //double k_is = this->weight_from_comm(v, new_comm);
+                //std::cout<<"Links between v and old_comm: "<< k_ir<< endl;
                 
                 double kappa_r = this->total_weight_from_comm(old_comm);
-                std::cout<<"Kappa r : "<< kappa_r<< endl;
                 double kappa_s = this->total_weight_from_comm(new_comm);
-                std::cout<<"Kappa s: "<< kappa_s << endl;
                 
                 
-              
-                //old community after
-                double m_rt1 = m_rt-2*k_it;
-                double m_st1 = m_st+2*k_it;
-                std::cout <<"M_rt1 : "<< m_rt1 <<endl;
-                std::cout <<"M_st1 : "<< m_st1 <<endl;
-               
-                
-                //calculate the difference
-               
-                double between_comm_t  = 2*plogp(m_rt1)- 2*plogp(m_rt) + 2*plogp(m_st1)-2*plogp(m_st);
-                
-               
-                
-                double m_rs1 = m_rs +k_ir-k_is;
-                
-                double M_rs = 2*plogp(m_rs1)-2*plogp(m_rs);
-                std::cout <<"M_rs1 : "<< m_rs1 <<endl;
-               
+                double exit_links= 2*plogp(m_rt-k_it)- 2*plogp(m_rt)+2*plogp(m_st+k_it)-2*plogp(m_st);
                 
                 
-                double m_rr1 = m_rr-k_ir;
-                double m_ss1 = m_ss+k_is;
-               
-                double in_comm_weights = plogp(m_rr1) - plogp(m_rr) +plogp(m_ss1)- plogp(m_ss);
-                std::cout <<"m_rr1 : "<< m_rr1 <<endl;
-                std::cout <<"m_ss1 : "<< m_ss1 <<endl;
-               
+                double between_r_s = 2*plogp(m_rs +k_ir-k_is)-2*plogp(m_rs);
+                double in_degree = plogp(m_rr-2*k_ir)-plogp(m_rr)+plogp(m_ss+2*k_is)- plogp(m_ss);
                 
-                double kappa_r1 = kappa_r-k_i;
-                double kappa_s1 = kappa_s+k_i;
-                
-                double diff_kappa = -2*plogp(kappa_r1)+2*plogp(kappa_r) -2*plogp(kappa_s1) +2*plogp(kappa_s);
-                std::cout <<"kapp_r1 : "<< kappa_r1 <<endl;
-                std::cout <<"kapp_s1 : "<< kappa_s1 <<endl;
-                
-            
-                std::cout <<"between_comm_t : "<< between_comm_t <<endl;
-                std::cout <<"M_rs : "<< M_rs <<endl;
-                std::cout <<"in_comm_weights:  "<< in_comm_weights<<endl;
-                std::cout <<"diff_kappa : "<< diff_kappa <<endl;
-                diff += between_comm_t +M_rs + in_comm_weights + diff_kappa;
-                
-                
-                std::cout<<"DIFF : "<< diff<< endl;
-            
-                
-               
+                double total_links = -2*plogp(kappa_r-2*(k_i+u_i))+2*plogp(kappa_r)-2*plogp(kappa_s+2*(k_i+u_i))+2*plogp(kappa_s);
+                //diff += after-before;
+                diff += exit_links +between_r_s +in_degree +total_links;
+                std::cout<<"the difference is: "<<diff<<endl;
             }
-           
-            
         }
-       
-       return diff;
-        
+    return diff;
     }
     //return diff;
 }

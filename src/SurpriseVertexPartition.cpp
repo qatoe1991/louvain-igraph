@@ -28,6 +28,7 @@ double SurpriseVertexPartition::diff_move(size_t v, size_t new_comm)
   #ifdef DEBUG
     cerr << "virtual double SurpriseVertexPartition::diff_move(" << v << ", " << new_comm << ")" << endl;
   #endif
+    //std::cout<<"double SurpriseVertexPartition::diff_move:  "<<v<< "," <<new_comm<<endl;
   size_t old_comm = this->membership(v);
   size_t nsize = this->graph->node_size(v);
   #ifdef DEBUG
@@ -105,6 +106,7 @@ double SurpriseVertexPartition::diff_move(size_t v, size_t new_comm)
     cerr << "return " << diff << endl << endl;
   #endif
   return diff;
+ //std::cout <<"The diferrence is: "<< diff<< endl;
 }
 
 double SurpriseVertexPartition::quality()

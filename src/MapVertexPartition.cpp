@@ -63,7 +63,7 @@ double MapVertexPartition::diff_move(size_t v, size_t new_comm)
         double w_v_new = this->weight_from_comm(v,new_comm);// the total weight between v and new_Comm
         double w_new = this->total_weight_from_comm(new_comm);//the total weight of links in new_com
         
-       // std::cout << "Comm\tInternal weight\tWeight between\tTotal weight" << std::endl;
+        //std::cout << "Comm\tInternal weight\tWeight between\tTotal weight" << std::endl;
         //std::cout << old_comm << "\t" << in_old << "\t" << w_v_old << "\t" << w_old << std::endl;
         //std::cout << new_comm << "\t" << in_new << "\t" << w_v_new << "\t" << w_new << std::endl;
         //Before move v to the other community L(M)

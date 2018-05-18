@@ -97,8 +97,10 @@ double ModularityVertexPartition::diff_move(size_t v, size_t new_comm)
     #ifdef DEBUG
       cerr << "\t" << "diff_old: " << diff_old << endl;
     #endif
+      
     double diff_new = (w_to_new + self_weight - k_out*K_in_new/total_weight) + \
                (w_from_new + self_weight - k_in*K_out_new/total_weight);
+       
     #ifdef DEBUG
       cerr << "\t" << "diff_new: " << diff_new << endl;
     #endif
@@ -106,6 +108,7 @@ double ModularityVertexPartition::diff_move(size_t v, size_t new_comm)
     #ifdef DEBUG
       cerr << "\t" << "diff: " << diff << endl;
     #endif
+      
   }
   #ifdef DEBUG
     cerr << "exit double ModularityVertexPartition::diff_move((" << v << ", " << new_comm << ")" << endl;
@@ -117,6 +120,7 @@ double ModularityVertexPartition::diff_move(size_t v, size_t new_comm)
   else
     m = 2*this->graph->total_weight();
   return diff/m;
+   
 }
 
 
