@@ -13,6 +13,14 @@ vector<size_t> range(size_t n)
   return range_vec;
 }
 
+queue<size_t> queue_range(size_t n)
+{
+  queue<size_t> range_vec;
+  for(size_t i = 0; i<n; i++)
+    range_vec.push(i);
+  return range_vec;
+}
+
 bool orderCSize(const size_t* A, const size_t* B)
 {
 
@@ -754,9 +762,6 @@ Graph* Graph::collapse_graph(MutableVertexPartition* partition)
   vector<double> collapsed_weights(m_collapsed, 0.0);
   double total_collapsed_weight = 0.0;
 
-  #ifdef DEBUG
-    cerr << "Creating " << m_collapsed << " new edges." << endl;
-  #endif
   igraph_vector_init(&edges, 2*m_collapsed); // Vector or edges with edges (edge[0], edge[1]), (edge[2], edge[3]), etc...
 
   size_t e_idx = 0;

@@ -43,11 +43,16 @@ the current partition, it is still possible that a next call will improve the
 partition. Of course, if the current partition is already optimal, this will
 never happen, but it is not possible to decide whether a partition is optimal.
 
-The :func:`~louvain.Optimiser.optimise_partition` itself is built on a basic
-algorithm: :func:`~louvain.Optimiser.move_nodes`. You can also call this
-function yourself. For example:
+The :func:`~louvain.Optimiser.optimise_partition` itself is built on two other
+basic algorithms: :func:`~louvain.Optimiser.move_nodes` and
+:func:`~louvain.Optimiser.merge_nodes`. You can also call these functions
+yourself. For example:
 
 >>> diff = optimiser.move_nodes(partition)
+
+or
+
+>>> optimiser.merge_nodes(partition);
 
 The usual strategy in the Louvain algorithm is then to aggregate the partition
 and repeat the :func:`~louvain.Optimiser.move_nodes` on the aggregated
@@ -74,13 +79,23 @@ Now ``partition_agg`` contains the aggregate partition and ``partition``
 contains the actual partition of the original graph ``G``. Of course,
 ``partition_agg.quality() == partition.quality()`` (save some rounding).
 
-The function :func:`~louvain.Optimiser.move_nodes` in turn relies on two key
-functions of the partition:
+Instead of :func:`~louvain.Optimiser.move_nodes`, you could also use
+:func:`~louvain.Optimiser.merge_nodes`. These functions depend on choosing
+particular alternative communities, the documentation of the functions provides
+more detail.
+
+One possibility is that rather than aggregating the partition based on the
+current partition, you can first refine the partition and then aggregate it.
+This can be done using the functions
+:func:`~louvain.Optimiser.move_nodes_constrained` and
+:func:`~louvain.Optimiser.merge_nodes_constrained`.
+
+These functions in turn rely on two key functions of the partition:
 :func:`~louvain.VertexPartition.MutableVertexPartition.diff_move` and
 :func:`~louvain.VertexPartition.MutableVertexPartition.move_node`. The first
 calculates the difference when moving a node, and the latter actually moves the
 node, and updates all necessary internal administration. The
-:func:`~louvain.Optimiser.move_nodes` then does something as follows
+:func:`~louvain.Optimiser.move_nodes` then does some as follows
 
 >>> for v in G.vs:
 ...   best_comm = max(range(len(partition)),
