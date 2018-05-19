@@ -19,6 +19,7 @@ class SBMVertexPartition: public MutableVertexPartition
     virtual double diff_move(size_t v, size_t new_comm);
     virtual double quality();
     virtual double plogp(double p);
+    virtual double getWeightBetweenCommunities(size_t r, size_t s);
   protected:
   private:
 };
