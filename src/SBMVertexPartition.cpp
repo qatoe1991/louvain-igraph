@@ -82,8 +82,10 @@ double SBMVertexPartition::diff_move(size_t v, size_t new_comm)
             
             if (t != old_comm && t != new_comm)
             {
+                // the edges between the old_comm and new_comm
                 double m_rs = this->getWeightBetweenCommunities(old_comm,new_comm);
                 std::cout<<"M_rs: "<<m_rs<<endl;
+                
                 double m_rt = this-> getWeightBetweenCommunities(old_comm, t);
                 double m_st = this-> getWeightBetweenCommunities(new_comm, t);
                 std::cout <<"M_rt: "<< m_rt<<endl;
@@ -121,7 +123,7 @@ double SBMVertexPartition::diff_move(size_t v, size_t new_comm)
                 
                 //calculate the difference
                
-                double between_comm_t  = 2*plogp(m_rt1)- 2*plogp(m_rt) + 2*plogp(m_st1)-2*plogp(m_st);
+                double between_comms  = 2*plogp(m_rt1)- 2*plogp(m_rt) + 2*plogp(m_st1)-2*plogp(m_st);
                 
                
                 
@@ -148,11 +150,11 @@ double SBMVertexPartition::diff_move(size_t v, size_t new_comm)
                 std::cout <<"kapp_s1 : "<< kappa_s1 <<endl;
                 
             
-                std::cout <<"between_comm_t : "<< between_comm_t <<endl;
+                std::cout <<"between_comms : "<< between_comms <<endl;
                 std::cout <<"M_rs : "<< M_rs <<endl;
                 std::cout <<"in_comm_weights:  "<< in_comm_weights<<endl;
                 std::cout <<"diff_kappa : "<< diff_kappa <<endl;
-                diff += between_comm_t +M_rs + in_comm_weights + diff_kappa;
+                diff += between_comms +M_rs + in_comm_weights + diff_kappa;
                 
                 
                 std::cout<<"DIFF : "<< diff<< endl;
@@ -164,10 +166,10 @@ double SBMVertexPartition::diff_move(size_t v, size_t new_comm)
             
         }
        
-       return diff;
+       //return diff;
         
     }
-    //return diff;
+    return diff;
 }
 // the quality
 double SBMVertexPartition::quality()
