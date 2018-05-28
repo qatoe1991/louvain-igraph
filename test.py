@@ -6,11 +6,11 @@ import igraph as ig
 #print(g.is_directed())
 #sys.exit(0)
 #g = Graph.Read_GML('/Users/kristiqato/Desktop/dolphins.gml')
-g = Graph.Formula('0 - 1 - 2 - 0, 2 - 3, 3 - 4 - 5 - 3')
-#g= ig.Graph.Famous('Zachary')
+#g = Graph.Formula('0 - 1 - 2 - 0, 2 - 3, 3 - 4 - 5 - 3')
+g= ig.Graph.Famous('Zachary')
 opt = louvain.Optimiser()
 #partition = louvain.MapVertexPartition(g, initial_membership=[0, 0, 0, 1, 1, 1])
-partition = louvain.MapVertexPartition(g)
+partition = louvain.SBMVertexPartition(g)
 
 for v in g.vs:
     comms = list(set([partition.membership[u] for u in g.neighbors(v)]))

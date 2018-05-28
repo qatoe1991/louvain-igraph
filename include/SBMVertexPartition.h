@@ -20,6 +20,7 @@ class SBMVertexPartition: public MutableVertexPartition
     virtual double quality();
     virtual double plogp(double p);
     virtual double getWeightBetweenCommunities(size_t r, size_t s);
+    //virtual double round(double diff, double sbm);
   protected:
   private:
 };
